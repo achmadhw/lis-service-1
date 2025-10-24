@@ -1,5 +1,5 @@
 {
-    "name": "LIS Service Laboratory",
+    "name": "softmedix/lis",
     "description": "An API for managing laboratory information systems softmedix",
     "keywords": [
         "laravel",
