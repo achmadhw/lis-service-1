@@ -13,6 +13,7 @@ class PayloadLength
     // PID (Patient Data)
     const PMRN      = 15;
     const PNAME     = 100;
+    const PSINGKATAN     = 100;
     const SEX       = 1;
     const BIRTH_DT  = 10;
     const ADDRESS   = 100;

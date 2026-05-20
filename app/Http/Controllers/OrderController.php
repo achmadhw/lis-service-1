@@ -380,6 +380,7 @@ class OrderController extends MshController
             // Delcared is non rs
             $pMRN       = $truncate($isNonRs ? ($item->pelayanan_id ?? '') : ($item->no_rm ?? ''), PayloadLength::PMRN);
             $pName      = $truncate($isNonRs ? ($item->front_desk_nama ?? '') : ($item->pasien_nama ?? ''), PayloadLength::PNAME);
+            $pSingkatan = $truncate($isNonRs ? ($item->title_singkatan ?? '') : ($item->title_singkatan ?? ''), PayloadLength::PSINGKATAN);
             $sex        = $truncate($isNonRs ? ($item->front_desk_jenis_kelamin ?? '') : ($item->jenis_kelamin ?? ''), PayloadLength::SEX);
             $address    = $truncate($isNonRs ? ($item->front_desk_alamat ?? '') : ($item->alamat ?? ''), PayloadLength::ADDRESS);
 
@@ -393,7 +394,7 @@ class OrderController extends MshController
                     "msh" => $mshData, // Gunakan yang sudah diproses
                     "pid" => [
                         "pmrn"      => $pMRN,
-                        "pname"     => $pName,
+                        "pname"     => $pSingkatan.' '.$pName,
                         "sex"       => $sex,
                         "birth_dt"  => $truncate($birthDate, PayloadLength::BIRTH_DT),
                         "address"   => $address,
@@ -464,6 +465,7 @@ class OrderController extends MshController
                 't_pelayanan.kelas_id',
                 'm_pasien.id as pasien_id',
                 'm_pasien.no_rm',
+                'm_title.singkatan as title_singkatan',
                 'm_pasien.nama as pasien_nama',
                 DB::raw("CASE 
                     WHEN m_pasien.jenis_kelamin = 1 THEN 'L'
@@ -511,6 +513,7 @@ class OrderController extends MshController
             ->leftJoin('m_bed', 'm_bed.id', '=', 't_pelayanan.bed_id')
             ->leftJoin('m_ruang', 'm_ruang.id', '=', 'm_bed.ruang_id')
             ->leftJoin('t_front_desk', 't_front_desk.pelayanan_id', '=', 't_pelayanan.id')
+            ->leftJoin('m_title', 'm_title.id', '=', 'm_pasien.title_id')
             ->whereIn('t_lab_register.kode_transaksi', $kode_transaksi)
             ->get();
 
